@@ -15,30 +15,30 @@
       // As substituições do início das mensagens de commit.
       "Replaces": {
         // Adicionar.
-        "Adicionar": "Foi adicionado",
         "Adicionar o ": "Foi adicionado o ",
         "Adicionar a ": "Foi adicionada a ",
-  
+        "Adicionar": "Foi adicionado",
+
         // Alterar.
-        "Alterar": "Foi alterado",
         "Alterar o ": "Foi alterado o ",
         "Alterar a ": "Foi alterada a ",
-  
+        "Alterar": "Foi alterado",
+
         // Atualizar.
-        "Atualizar": "Foi atualizado",
         "Atualizar o ": "Foi atualizado o ",
         "Atualizar a ": "Foi atualizada a ",
-  
+        "Atualizar": "Foi atualizado",
+
         // Remover.
-        "Remover": "Foi removido",
         "Remover o ": "Foi removido o ",
         "Remover a ": "Foi removida a ",
-  
+        "Remover": "Foi removido",
+
         // Refatorar.
-        "Refatorar": "Foi refatorado",
         "Refatorar o ": "Foi refatorado o ",
         "Refatorar a ": "Foi refatorada a ",
-  
+        "Refatorar": "Foi refatorado",
+
         // Corrigir.
         "Corrigir": "Corrigido um problema em que"
       },
