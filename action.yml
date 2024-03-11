@@ -1,6 +1,10 @@
-name: Auto Release
+name: Auto Release Action
 author: KempDec
 description: Gere automaticamente releases do seu projeto no GitHub usando o Auto Release para GitHub Actions.
+
+branding:
+  icon: "tag"
+  color: "gray-dark"
 
 outputs:
   output:
