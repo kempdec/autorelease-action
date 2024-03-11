@@ -1,0 +1,51 @@
+{
+    // As configurações do subcomando de criação automática de um release.
+    "CreateCommand": {
+      // O nome do projeto.
+      "ProjectName": "Auto Release Action",
+  
+      // Os tipos das mensagens de commit.
+      "Types": [
+        "feat=Novidades desta versão",
+        "fix=Principais correções desta versão",
+        "chore=Notas técnicas",
+        "docs=Documentação"
+      ],
+  
+      // As substituições do início das mensagens de commit.
+      "Replaces": {
+        // Adicionar.
+        "Adicionar": "Foi adicionado",
+        "Adicionar o ": "Foi adicionado o ",
+        "Adicionar a ": "Foi adicionada a ",
+  
+        // Alterar.
+        "Alterar": "Foi alterado",
+        "Alterar o ": "Foi alterado o ",
+        "Alterar a ": "Foi alterada a ",
+  
+        // Atualizar.
+        "Atualizar": "Foi atualizado",
+        "Atualizar o ": "Foi atualizado o ",
+        "Atualizar a ": "Foi atualizada a ",
+  
+        // Remover.
+        "Remover": "Foi removido",
+        "Remover o ": "Foi removido o ",
+        "Remover a ": "Foi removida a ",
+  
+        // Refatorar.
+        "Refatorar": "Foi refatorado",
+        "Refatorar o ": "Foi refatorado o ",
+        "Refatorar a ": "Foi refatorada a ",
+  
+        // Corrigir.
+        "Corrigir": "Corrigido um problema em que"
+      },
+  
+      // Os inícios das mensagens de commit que serão ignoradas.
+      "Ignores": [
+        "Refatorar."
+      ]
+    }
+  }
