@@ -1,0 +1,7 @@
+# Remova a linha abaixo se quiser herdar as configurações do .editorconfig de diretórios superiores
+root = true
+
+# Arquivos YAML
+[*.yml]
+indent_size = 2
+indent_style = space
