@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Criar Release
-        uses: kempdec/autorelease-action@v1
+        uses: kempdec/autorelease-action@v2
         env:
           AutoRelease_Token: ${{ secrets.GITHUB_TOKEN }}
           AutoRelease_Version: ${{ github.ref_name }}
