@@ -6,6 +6,19 @@ branding:
   icon: "tag"
   color: "gray-dark"
 
+inputs:
+  version:
+    description: |
+      A versão do Auto Release.
+      Padrão: '0.*'
+    default: '0.*'
+
+  skip-need-steps:
+    description: |
+      Um sinalizador indicando se as etapas necessárias devem ser puladas.
+      Padrão: false.
+    default: false
+
 outputs:
   output:
     description: "A saída da criação automática do release"
@@ -16,15 +29,17 @@ runs:
 
   steps:
     - name: Checkout do repositório
+      if: ${{ inputs.skip-need-steps == 'false' }}
       uses: actions/checkout@v4
 
     - name: Configurar o .NET
+      if: ${{ inputs.skip-need-steps == 'false' }}
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.x
     
     - name: Instalar o Auto Release
-      run: dotnet tool install -g autorelease
+      run: dotnet tool install autorelease -g --version ${{ inputs.version }}
       shell: bash
 
     - name: Criar release com o Auto Release

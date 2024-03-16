@@ -6,6 +6,15 @@ Gere automaticamente releases do seu projeto no GitHub usando o Auto Release par
 
 Aprenda como usar o **Auto Release** [clicando aqui.](https://github.com/kempdec/AutoRelease)
 
+## Entradas
+
+As entradas estão disponíveis somente a partir da versão 2 do Auto Release Action (`kempdec/autorelease-action`).
+
+| **Entrada**       | **Tipo**  | **Padrão** | **Descrição** |
+| ----------------- | --------- | ---------- | ------------- |
+| `version`         | `string`  | `0.*`      | A versão do Auto Release. |
+| `skip-need-steps` | `boolean` | `false`    | Um sinalizador indicando se as etapas necessárias devem ser puladas.<br><br>Use essa opção se você deseja que `actions/checkout` e `actions/setup-dotnet` sejam executados por você e não por `kempdec/autorelease-action`. |
+
 ## Exemplos simples de uso
 
 Criar uma release após um `push` no branch `main`.
@@ -28,7 +37,7 @@ jobs:
 
     steps:
       - name: Criar Release
-        uses: kempdec/autorelease-action@v1
+        uses: kempdec/autorelease-action@v2
         env:
           AutoRelease_Token: ${{ secrets.GITHUB_TOKEN }} # Este token é fornecido pelo GitHub Actions, você não precisa criar seu próprio token.
 ```
@@ -53,7 +62,7 @@ jobs:
 
     steps:
       - name: Criar Release
-        uses: kempdec/autorelease-action@v1
+        uses: kempdec/autorelease-action@v2
         env:
           AutoRelease_Token: ${{ secrets.GITHUB_TOKEN }} # Este token é fornecido pelo GitHub Actions, você não precisa criar seu próprio token.
           AutoRelease_Version: ${{ github.ref_name }}
