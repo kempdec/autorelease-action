@@ -1,6 +1,6 @@
 name: Auto Release Action
 author: KempDec
-description: Gere automaticamente releases do seu projeto no GitHub usando o Auto Release para GitHub Actions.
+description: Gere as releases do seu projeto no GitHub a partir das mensagens de commit, com o Auto Release.
 
 branding:
   icon: "tag"
@@ -9,20 +9,34 @@ branding:
 inputs:
   version:
     description: |
-      A versão do Auto Release.
-      Padrão: '0.*'
-    default: '0.*'
+      A versão do Auto Release, como 2.* ou 2.0.0.
+      Padrão: '2.*'.
+    default: "2.*"
+
+  command:
+    description: |
+      O comando do Auto Release: create, note, version ou lint.
+      Padrão: create.
+    default: "create"
+
+  arguments:
+    description: |
+      Os argumentos extras do comando, separados por espaço, como "--from <commit> --to <commit>" no lint ou
+      "--dry-run" no create.
+      Padrão: nenhum.
+    default: ""
 
   skip-need-steps:
     description: |
-      Um sinalizador indicando se as etapas necessárias devem ser puladas.
+      Um sinalizador indicando se as etapas necessárias (o checkout e a instalação do .NET) devem ser puladas, quando o
+      seu fluxo já faz as duas.
       Padrão: false.
-    default: false
+    default: "false"
 
 outputs:
   output:
-    description: "A saída da criação automática do release"
-    value: ${{ steps.release.outputs.OUTPUT }}
+    description: "O que o comando escreveu na saída: a versão, as notas ou o que AutoRelease_CreateCommand__OutputType pede."
+    value: ${{ steps.autorelease.outputs.output }}
 
 runs:
   using: "composite"
@@ -31,20 +45,50 @@ runs:
     - name: Checkout do repositório
       if: ${{ inputs.skip-need-steps == 'false' }}
       uses: actions/checkout@v4
+      with:
+        # O comando lint lê os commits pelo Git, então precisa da história.
+        fetch-depth: 0
 
     - name: Configurar o .NET
       if: ${{ inputs.skip-need-steps == 'false' }}
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.x
-    
-    - name: Instalar o Auto Release
-      run: dotnet tool install autorelease -g --version ${{ inputs.version }}
-      shell: bash
+        dotnet-version: 10.x
 
-    - name: Criar release com o Auto Release
-      id: release
-      run: echo "OUTPUT=$(autorelease create)" >> "$GITHUB_OUTPUT"
+    # As entradas chegam ao shell por variável de ambiente, e não pela expressão no meio do script, para nenhum valor
+    # virar um comando.
+    - name: Instalar o Auto Release
       shell: bash
       env:
-        AutoRelease_Repo: ${{ github.repository }}
+        AUTORELEASE_VERSION: ${{ inputs.version }}
+      run: dotnet tool install autorelease --global --version "$AUTORELEASE_VERSION"
+
+    # A atribuição separada faz o passo falhar quando o Auto Release falha: dentro do echo, o código de saída se
+    # perdia, e o fluxo passava como se tivesse dado certo. O delimitador guarda a saída de várias linhas (as notas).
+    - name: Rodar o Auto Release
+      id: autorelease
+      shell: bash
+      env:
+        AUTORELEASE_COMMAND: ${{ inputs.command }}
+        AUTORELEASE_ARGUMENTS: ${{ inputs.arguments }}
+      run: |
+        set -euo pipefail
+
+        case "$AUTORELEASE_COMMAND" in
+          create|note|version|lint) ;;
+          *)
+            echo "::error::O comando \"$AUTORELEASE_COMMAND\" não existe. Use create, note, version ou lint."
+            exit 1
+            ;;
+        esac
+
+        # O read separa os argumentos por espaço, sem expandir curingas nem rodar o que vier neles.
+        read -r -a arguments <<< "$AUTORELEASE_ARGUMENTS"
+        output="$(autorelease "$AUTORELEASE_COMMAND" "${arguments[@]}")"
+        delimiter="AUTORELEASE_$(openssl rand -hex 8)"
+
+        {
+          echo "output<<$delimiter"
+          echo "$output"
+          echo "$delimiter"
+        } >> "$GITHUB_OUTPUT"
